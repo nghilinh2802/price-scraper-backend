@@ -1,2 +1,13 @@
-node_modules/
+# Firebase
 serviceAccountKey.json
+
+# Node modules
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+
+# Cache
+.cache/
