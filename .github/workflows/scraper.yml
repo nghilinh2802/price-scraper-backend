@@ -1,0 +1,31 @@
+name: Auto Scrape Prices
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Chạy mỗi giờ (giờ UTC). Thay đổi phù hợp (VD: '0 2 * * *' là 9h VN mỗi ngày)
+  workflow_dispatch:      # Cho phép chạy thủ công từ GitHub
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Copy Firebase service account key
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo "$SERVICE_ACCOUNT_JSON" > serviceAccountKey.json
+
+      - name: Run scraping logic (autoScrape)
+        run: node -e "require('./server').autoScrape && require('./server').autoScrape()"
